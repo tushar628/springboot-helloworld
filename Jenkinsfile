@@ -1,5 +1,6 @@
 node{
     def mvnHome
+	try{
     stage('clone_from_git'){
         git 'https://github.com/tushar628/springboot-helloworld.git'
         mvnHome=tool 'MyMaven'
@@ -50,6 +51,13 @@ node{
                     ]
         }"""
         server.download(downloadSpec)
+    }
+	}
+	catch(caughtError){
+            currentBuild.result = "FAILURE"
+            mail (to: 'Tusharkanta.Sahoo@mindtree.com',
+            subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is failing",
+            body: "Hi Tushar, Please visit ${env.BUILD_URL}. This build failied due to some issue.");
     }
 }
 
